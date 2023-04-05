@@ -13,11 +13,21 @@ async function Reqistration(req, res) {
   const saltRounds = 10;
   const hashPassword = await bcrypt.hash(password, saltRounds);
   try {
-    const result = await pool.query(
+    const findUser = await pool.query(
+      `SELECT email, password FROM users WHERE email='${email}'`
+    );
+    if (findUser.rows[0].email === email) {
+      throw {
+        status: 409,
+        message: `User with email ${email} already exist`,
+        data: null,
+      };
+    }
+    const createUser = await pool.query(
       `INSERT INTO users (email, password) VALUES ('${email}', '${hashPassword}') RETURNING *`
     );
-    console.log(result);
-    if (!result.rows[0]) {
+    // console.log(createUser);
+    if (!createUser.rows[0]) {
       throw {
         status: 500,
         message: "Ooops, something is wrong. Repete again, please",
@@ -27,7 +37,7 @@ async function Reqistration(req, res) {
     res.status(200).json({
       status: 201,
       message: "User created",
-      data: result.rows[0].email,
+      data: createUser.rows[0].email,
     });
   } catch (error) {
     res.status(error.status).json({

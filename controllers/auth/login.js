@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const Pool = require("pg").Pool;
 const pool = new Pool({
   user: "rootuser",
@@ -32,10 +33,14 @@ async function Login(req, res) {
         data: null,
       };
     }
+    const token = jwt.sign({ email: email }, "native");
     res.status(200).json({
       status: 200,
       message: "Authorization is done",
-      data: result.rows[0].email,
+      data: {
+        token,
+        email,
+      },
     });
   } catch (error) {
     res.status(error.status).json({

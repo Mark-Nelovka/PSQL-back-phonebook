@@ -26,7 +26,6 @@ async function Reqistration(req, res) {
     const createUser = await pool.query(
       `INSERT INTO users (email, password) VALUES ('${email}', '${hashPassword}') RETURNING *`
     );
-    // console.log(createUser);
     if (!createUser.rows[0]) {
       throw {
         status: 500,

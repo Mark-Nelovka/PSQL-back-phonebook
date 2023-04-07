@@ -1,1 +1,3 @@
-export default function updateContact(req, res) {}
+async function updateContact(req, res) {}
+
+module.exports = updateContact;

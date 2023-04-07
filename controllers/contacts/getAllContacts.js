@@ -1,1 +1,3 @@
-export default function getAllContacts(req, res) {}
+async function getAllContacts(req, res) {}
+
+module.exports = getAllContacts;

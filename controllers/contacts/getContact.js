@@ -1,1 +1,3 @@
-export default function getContact(req, res) {}
+async function getContact(req, res) {}
+
+module.exports = getContact;
